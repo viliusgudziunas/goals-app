@@ -7,6 +7,10 @@ RUN apk update && \
     apk add postgresql-dev && \
     apk add netcat-openbsd
 
+# Environment
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONBUFFERED 1
+
 # Working directory
 RUN mkdir -p /src/src/app
 WORKDIR /usr/src/app
@@ -23,6 +27,3 @@ RUN chmod +x /usr/src/app/entrypoint.sh
 
 # App
 COPY . /usr/src/app
-
-# Run server
-CMD ["/usr/src/app/entrypoint.sh"]
