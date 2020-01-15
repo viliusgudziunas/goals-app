@@ -1,32 +1,24 @@
 import os
-from flask import Flask, jsonify
-from flask_restful import Resource, Api
+from flask import Flask
+from flask_restplus import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
-app_settings = os.getenv("APP_SETTINGS")
-app.config.from_object(app_settings)
 
-api = Api(app)
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 
-class User(db.Model):
-    __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    email = db.Column(db.String(128), nullable=False)
-    active = db.Column(db.Boolean(), default=True, nullable=False)
+def create_app(script_info=None):
+    app = Flask(__name__)
+    app_settings = os.getenv("APP_SETTINGS")
+    app.config.from_object(app_settings)
 
-    def __init__(self, email):
-        self.email = email
+    db.init_app(app)
 
+    from project.api.users import users_blueprint
+    app.register_blueprint(users_blueprint)
 
-class UsersPing(Resource):
-    def get(self):
-        return {
-            "status": "success",
-            "message": "pong!"
-        }
+    @app.shell_context_processor
+    def ctx():
+        return {"app": app, "db": db}
 
-
-api.add_resource(UsersPing, "/users/ping")
+    return app
