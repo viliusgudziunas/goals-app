@@ -1,5 +1,7 @@
-import pytest
 import json
+
+import pytest
+
 from project import create_app, db
 from project.api.models import User
 
@@ -27,6 +29,7 @@ def add_user():
         db.session.add(user)
         db.session.commit()
         return user
+
     return _add_user
 
 
@@ -34,9 +37,8 @@ def add_user():
 def post_users():
     def _post_users(client, email="test@test.com"):
         resp = client.post(
-            "/users",
-            data=json.dumps({"email": email}),
-            content_type="application/json"
+            "/users", data=json.dumps({"email": email}), content_type="application/json"
         )
         return resp
+
     return _post_users

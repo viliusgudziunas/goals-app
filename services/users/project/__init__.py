@@ -1,6 +1,5 @@
 import os
 from flask import Flask
-from flask_restplus import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -15,6 +14,7 @@ def create_app(script_info=None):
     db.init_app(app)
 
     from project.api.users import users_blueprint
+
     app.register_blueprint(users_blueprint)
 
     @app.shell_context_processor

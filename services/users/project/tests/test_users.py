@@ -24,10 +24,7 @@ def test_add_user(test_app, test_db, post_users):
 def test_add_user_no_json(test_app, test_db):
     """Ensure /users route responds propertly when no data is sent"""
     client = test_app.test_client()
-    resp = client.post(
-        "/users",
-        content_type="application/json"
-    )
+    resp = client.post("/users", content_type="application/json")
 
     data = resp.json
     assert resp.status_code == 400
@@ -38,11 +35,7 @@ def test_add_user_no_json(test_app, test_db):
 def test_add_user_empty_json(test_app, test_db):
     """Ensure /users route responds propertly when empty json is sent"""
     client = test_app.test_client()
-    resp = client.post(
-        "/users",
-        data=json.dumps({}),
-        content_type="application/json"
-    )
+    resp = client.post("/users", data=json.dumps({}), content_type="application/json")
 
     data = resp.json
     assert resp.status_code == 400
@@ -88,7 +81,8 @@ def test_single_user(test_app, test_db, add_user):
 
 
 def test_single_user_id_not_integer(test_app, test_db):
-    """Ensure /users/<int:user_id> route responds properly when a non integer value is passed in for user_id"""
+    """Ensure /users/<int:user_id> route responds properly
+    when a non integer value is passed in for user_id"""
     client = test_app.test_client()
     resp = client.get("/users/test")
 
@@ -96,7 +90,8 @@ def test_single_user_id_not_integer(test_app, test_db):
 
 
 def test_single_user_incorrect_id(test_app, test_db):
-    """Ensure /users/<int:user_id> route responds properly when incorrect user_id is passed in"""
+    """Ensure /users/<int:user_id> route responds properly
+    when incorrect user_id is passed in"""
     client = test_app.test_client()
     resp = client.get("/users/0")
 

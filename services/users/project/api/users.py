@@ -1,5 +1,6 @@
 from flask import Blueprint
-from flask_restplus import Resource, Api, fields
+from flask_restplus import Api, Resource, fields
+
 from project import db
 from project.api.models import User
 
@@ -13,11 +14,14 @@ class UsersPing(Resource):
         return {"message": "pong!"}, 200
 
 
-user = api.model("User", {
-    "id": fields.Integer(readOnly=True),
-    "email": fields.String(required=True, min_length=6),
-    "created_date": fields.DateTime
-})
+user = api.model(
+    "User",
+    {
+        "id": fields.Integer(readOnly=True),
+        "email": fields.String(required=True, min_length=6),
+        "created_date": fields.DateTime,
+    },
+)
 
 
 @api.route("/users")
