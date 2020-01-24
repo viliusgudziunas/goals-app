@@ -1,9 +1,11 @@
 import os
 from flask import Flask
+from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
 
 
 db = SQLAlchemy()
+admin = Admin(template_mode="bootstrap3")
 
 
 def create_app(script_info=None):
@@ -12,6 +14,8 @@ def create_app(script_info=None):
     app.config.from_object(app_settings)
 
     db.init_app(app)
+    if os.getenv("FLASK_ENV") == "development":
+        admin.init_app(app)
 
     from project.api.users import users_blueprint
 

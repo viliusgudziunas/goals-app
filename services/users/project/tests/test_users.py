@@ -28,7 +28,7 @@ def test_add_user_no_json(test_app, test_db):
 
     data = resp.json
     assert resp.status_code == 400
-    msg = "Failed to decode JSON object: Expecting value: line 1 column 1 (char 0)"
+    msg = "The browser (or proxy) sent a request that this server could not understand."
     assert data["message"] == msg
 
 
