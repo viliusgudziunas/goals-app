@@ -17,12 +17,12 @@ const App = () => {
   }, []);
 
   return (
-    <div className="container">
+    <div className='container'>
       <br />
-      <h1 className="">All Users</h1>
+      <h1>All Users</h1>
       <hr />
-      <div className="row">
-        <div className="column">
+      <div className='row'>
+        <div className='column'>
           <UsersList users={users} />
         </div>
       </div>
