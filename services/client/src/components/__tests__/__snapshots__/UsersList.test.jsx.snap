@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UsersList renders a snapshot properly 1`] = `
+<div
+  className="list-group list-group-flush"
+>
+  <div
+    className="list-group-item"
+  >
+    test@test.com
+  </div>
+  <div
+    className="list-group-item"
+  >
+    test2@test.com
+  </div>
+</div>
+`;
