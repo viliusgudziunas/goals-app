@@ -1,0 +1,43 @@
+###########
+# BUILDER #
+###########
+
+# Base Image
+FROM node:12.14.1-alpine as builder
+
+# Working directory
+RUN mkdir -p /src/src/app
+WORKDIR /usr/src/app
+
+# Dependancies
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+COPY package.json /usr/src/app/package.json
+COPY package-lock.json /usr/src/app/package-lock.json
+RUN npm ci
+RUN npm install react-scripts@3.3.0 -g --silent
+
+# Environment
+ARG REACT_APP_USERS_SERVICE_URL
+ENV REACT_APP_USERS_SERVICE_URL $REACT_APP_USERS_SERVICE_URL
+ARG NODE_ENV
+ENV NODE_ENV $NODE_ENV
+
+# Create build
+COPY . /usr/src/app
+RUN npm run build
+
+#########
+# FINAL #
+#########
+
+# Base image
+FROM nginx:1.17.7-alpine
+
+# Static files
+COPY --from=builder /usr/src/app/build /usr/share/nginx/html
+
+# Port
+EXPOSE 80
+
+# Run nginx
+CMD ["nginx", "-g", "daemon off;"]

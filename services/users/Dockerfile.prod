@@ -1,15 +1,15 @@
 # Base image
 FROM python:3.8.1-alpine
 
+# Environment
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONBUFFERED 1
+
 # Dependancies
 RUN apk update && \
     apk add --virtual build-deps gcc python-dev musl-dev && \
     apk add postgresql-dev && \
     apk add netcat-openbsd
-
-# Environment
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONBUFFERED 1
 
 # Working directory
 RUN mkdir -p /src/src/app
@@ -25,5 +25,5 @@ RUN pipenv install --skip-lock --deploy --system
 COPY ./entrypoint-prod.sh /usr/src/app/entrypoint-prod.sh
 RUN chmod +x /usr/src/app/entrypoint-prod.sh
 
-# App
+# Add app
 COPY . /usr/src/app
