@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import UsersList from './UsersList';
+import AddUser from './AddUser';
 
 const App = () => {
   const [users, setUsers] = useState([]);
+  const [pingFetchUsers, setPingFetchUsers] = useState(true);
 
   useEffect(() => {
     axios
@@ -14,12 +16,17 @@ const App = () => {
       .catch(err => {
         console.log(err);
       });
-  }, []);
+  }, [pingFetchUsers]);
 
   return (
     <div className='container'>
       <br />
       <h1>All Users</h1>
+      <hr />
+      <AddUser
+        pingFetchUsers={pingFetchUsers}
+        setPingFetchUsers={setPingFetchUsers}
+      />
       <hr />
       <div className='row'>
         <div className='column'>

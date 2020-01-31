@@ -9,17 +9,17 @@ const users = [
 ];
 
 describe('UsersList', () => {
+  it('renders a snapshot properly', () => {
+    const tree = renderer.create(<UsersList users={users} />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  const wrapper = shallow(<UsersList users={users} />);
   it('renders properly', () => {
-    const wrapper = shallow(<UsersList users={users} />);
     const element = wrapper.find('.list-group-item');
 
     expect(element.length).toBe(2);
     expect(element.get(0).props.children).toBe('test@test.com');
     expect(element.get(1).props.children).toBe('test2@test.com');
-  });
-
-  it('renders a snapshot properly', () => {
-    const tree = renderer.create(<UsersList users={users} />).toJSON();
-    expect(tree).toMatchSnapshot();
   });
 });
