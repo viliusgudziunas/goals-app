@@ -3,11 +3,13 @@ from flask import Flask
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from flask_migrate import Migrate
 
 
 db = SQLAlchemy()
 admin = Admin(template_mode="bootstrap3")
 cors = CORS()
+migrate = Migrate()
 
 
 def create_app(script_info=None):
@@ -19,6 +21,7 @@ def create_app(script_info=None):
     if os.getenv("FLASK_ENV") == "development":
         admin.init_app(app)
     cors.init_app(app)
+    migrate.init_app(app, db)
 
     from project.api.users import users_blueprint
 
