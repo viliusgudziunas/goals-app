@@ -20,9 +20,9 @@ before_script:
 script:
   - docker-compose exec users pytest "project/tests" -p no:warnings
   - docker-compose exec users flake8 .
-  - dc exec users black . --check --exclude=migrations
-  - dc exec users /bin/sh -c "isort ./*/*/*.py --check-only --filter-files"
-  - dc exec client react-scripts test --coverage --watchAll=false
+  - docker-compose exec users black . --check --exclude=migrations
+  - docker-compose exec users /bin/sh -c "isort ./*/*/*.py --check-only --filter-files"
+  - docker-compose exec client react-scripts test --coverage --watchAll=false
 
 after_script:
   - docker-compose down
