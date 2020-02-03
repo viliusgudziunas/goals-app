@@ -46,11 +46,34 @@ def test_add_user_empty_json(test_app, test_db):
 def test_add_user_empty_email(test_app, test_db, post_users):
     """Ensure /users route responds properly when empty email is sent"""
     client = test_app.test_client()
-    resp = post_users(client, "")
+    resp = post_users(client, email="")
 
     data = resp.json
     assert resp.status_code == 400
     assert data["errors"]["email"] == "'' is too short"
+    assert data["message"] == "Input payload validation failed"
+
+
+def test_add_user_empty_password(test_app, test_db, post_users):
+    """Ensure /users route responds properly when empty password is sent"""
+    client = test_app.test_client()
+    resp = post_users(client, password="")
+
+    data = resp.json
+    assert resp.status_code == 400
+    assert data["errors"]["password"] == "'' is too short"
+    assert data["message"] == "Input payload validation failed"
+
+
+def test_add_user_short_password(test_app, test_db, post_users):
+    """Ensure /users route responds properly
+    when a password that is too short is passed in"""
+    client = test_app.test_client()
+    resp = post_users(client, password="123")
+
+    data = resp.json
+    assert resp.status_code == 400
+    assert data["errors"]["password"] == "'123' is too short"
     assert data["message"] == "Input payload validation failed"
 
 

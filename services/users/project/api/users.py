@@ -23,6 +23,14 @@ user = api.model(
     },
 )
 
+new_user = api.model(
+    "User",
+    {
+        "email": fields.String(required=True, min_length=6),
+        "password": fields.String(required=True, min_length=4),
+    },
+)
+
 
 @api.route("/users")
 class UsersList(Resource):
@@ -30,16 +38,17 @@ class UsersList(Resource):
     def get(self):
         return User.query.all(), 200
 
-    @api.expect(user, validate=True)
+    @api.expect(new_user, validate=True)
     def post(self):
         data = api.payload
         email = data.get("email")
+        password = data.get("password")
         user = User.query.filter_by(email=email).first()
         if user:
             message = f"Email {email} already exists"
             api.abort(400, message, status="fail")
 
-        db.session.add(User(email=email))
+        db.session.add(User(email=email, password=password))
         db.session.commit()
         return {"message": f"{email} was successfully added!"}, 201
 

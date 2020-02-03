@@ -24,8 +24,8 @@ def test_db():
 
 @pytest.fixture(scope="function")
 def add_user():
-    def _add_user(email="test@test.com"):
-        user = User(email=email)
+    def _add_user(email="test@test.com", password="test"):
+        user = User(email=email, password=password)
         db.session.add(user)
         db.session.commit()
         return user
@@ -35,9 +35,11 @@ def add_user():
 
 @pytest.fixture(scope="function")
 def post_users():
-    def _post_users(client, email="test@test.com"):
+    def _post_users(client, email="test@test.com", password="test"):
         resp = client.post(
-            "/users", data=json.dumps({"email": email}), content_type="application/json"
+            "/users",
+            data=json.dumps({"email": email, "password": password}),
+            content_type="application/json",
         )
         return resp
 

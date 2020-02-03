@@ -1,15 +1,14 @@
 # Base image
-FROM python:3.8.1-alpine
+FROM python:3.8.1-slim
 
 # Environment
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONBUFFERED 1
 
 # Dependancies
-RUN apk update && \
-    apk add --virtual build-deps gcc python-dev musl-dev && \
-    apk add postgresql-dev && \
-    apk add netcat-openbsd
+RUN apt-get update && \
+    apt-get -y install netcat && \
+    apt-get clean
 
 # Working directory
 RUN mkdir -p /src/src/app
