@@ -122,6 +122,7 @@ def test_all_users(test_app, test_db, add_user):
 
     data = resp.json
     assert resp.status_code == 200
+    assert data["status"] == "success"
     assert len(data["data"]) == 2
     for user in data["data"]:
         assert len(user.keys()) == 3

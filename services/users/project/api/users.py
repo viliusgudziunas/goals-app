@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask_restplus import Api, Resource, fields
+from flask_restplus import Api, Resource, fields, marshal
 
 from project import db
 from project.api.models import User
@@ -11,55 +11,59 @@ api = Api(users_blueprint)
 @api.route("/users/ping")
 class UsersPing(Resource):
     def get(self):
-        return {"message": "pong!"}, 200
+        return {"status": "success", "message": "pong!"}, 200
 
 
-user = api.model(
-    "User",
-    {
-        "id": fields.Integer(readOnly=True),
-        "email": fields.String(required=True, min_length=6),
-        "created_date": fields.DateTime,
-    },
-)
+response = api.model("Response", {"status": fields.String})
 
-new_user = api.model(
-    "User",
-    {
-        "email": fields.String(required=True, min_length=6),
-        "password": fields.String(required=True, min_length=4),
-    },
-)
+user_model = api.model("User", {"id": fields.Integer,
+                                "email": fields.String,
+                                "created_date": fields.DateTime, })
+
+users_list = api.inherit("UsersList", response, {
+    "data": fields.List(fields.Nested(user_model))
+})
+
+post_users_list = api.model("PostUsersList", {
+    "email": fields.String(required=True, min_length=6),
+    "password": fields.String(required=True, min_length=4)
+})
+
+users_success = api.inherit("UsersSuccess", response, {
+    "data": fields.Nested(user_model)
+})
 
 
 @api.route("/users")
 class UsersList(Resource):
-    @api.marshal_with(user, as_list=True, envelope="data")
+    @api.marshal_with(users_list)
     def get(self):
-        return User.query.all(), 200
+        return {"status": "success", "data": User.query.all()}, 200
 
-    @api.expect(new_user, validate=True)
+    @api.expect(post_users_list, validate=True)
+    @api.marshal_with(users_success)
     def post(self):
         data = api.payload
         email = data.get("email")
         password = data.get("password")
         user = User.query.filter_by(email=email).first()
         if user:
-            message = f"Email {email} already exists"
+            message = f"Email '{email}' already exists"
             api.abort(400, message, status="fail")
 
-        db.session.add(User(email=email, password=password))
+        user = User(email=email, password=password)
+        db.session.add(user)
         db.session.commit()
-        return {"message": f"{email} was successfully added!"}, 201
+        return {"status": "success", "data": user}, 201
 
 
 @api.route("/users/<int:user_id>")
 class Users(Resource):
-    @api.marshal_with(user)
+    @api.marshal_with(users_success)
     def get(self, user_id):
         user = User.query.filter_by(id=user_id).first()
         if not user:
-            message = f"User {user_id} does not exist"
+            message = f"User id '{user_id}' does not exist"
             api.abort(404, message, status="fail")
 
-        return user, 200
+        return {"status": "success", "data": user}, 200

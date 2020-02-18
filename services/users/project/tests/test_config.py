@@ -11,6 +11,7 @@ def test_development_config(test_app):
     assert test_app.config["BCRYPT_LOG_ROUNDS"] == 4
     assert test_app.config["TOKEN_EXPIRATION_DAYS"] == 30
     assert test_app.config["TOKEN_EXPIRATION_SECONDS"] == 0
+    assert not test_app.config["ERROR_404_HELP"]
 
 
 def test_testing_config(test_app):
@@ -25,6 +26,7 @@ def test_testing_config(test_app):
     assert test_app.config["BCRYPT_LOG_ROUNDS"] == 4
     assert test_app.config["TOKEN_EXPIRATION_DAYS"] == 0
     assert test_app.config["TOKEN_EXPIRATION_SECONDS"] == 1
+    assert not test_app.config["ERROR_404_HELP"]
 
 
 def test_production_config(test_app):
@@ -37,3 +39,4 @@ def test_production_config(test_app):
     assert test_app.config["BCRYPT_LOG_ROUNDS"] == 13
     assert test_app.config["TOKEN_EXPIRATION_DAYS"] == 30
     assert test_app.config["TOKEN_EXPIRATION_SECONDS"] == 0
+    assert not test_app.config["ERROR_404_HELP"]

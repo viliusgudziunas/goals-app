@@ -11,6 +11,7 @@ class BaseConfig:
     BCRYPT_LOG_ROUNDS = 13
     TOKEN_EXPIRATION_DAYS = 30
     TOKEN_EXPIRATION_SECONDS = 0
+    ERROR_404_HELP = False
 
 
 class DevelopmentConfig(BaseConfig):
