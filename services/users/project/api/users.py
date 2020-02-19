@@ -18,7 +18,7 @@ user_model = api.model(
 response_model = api.model("Response", {"status": fields.String})
 
 post_users = api.inherit(
-    "PostUsers", user_model, {"password": fields.String(required=True, min_length=4),},
+    "PostUsers", user_model, {"password": fields.String(required=True, min_length=4)},
 )
 
 user_response = api.inherit(
