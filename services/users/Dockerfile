@@ -18,7 +18,8 @@ WORKDIR /usr/src/app
 RUN pip install --upgrade pip && \
     pip install pipenv
 COPY ./Pipfile /usr/src/app/Pipfile
-RUN pipenv install --skip-lock --deploy --system
+COPY ./Pipfile.lock /usr/src/app/Pipfile.lock
+RUN pipenv install --ignore-pipfile --deploy --system
 
 # Entrypoint
 COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
