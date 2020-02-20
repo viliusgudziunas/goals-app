@@ -4,7 +4,7 @@ services:
   - docker
 
 env:
-  DOCKER_COMPOSE_VERSION: 1.25.4
+  DOCKER_COMPOSE_VERSION: 1.25.3
   FLASK_ENV: development
 
 before_install:
