@@ -7,6 +7,7 @@ env:
   DOCKER_COMPOSE_VERSION: 1.25.4
   FLASK_ENV: development
   USERS_CACHE_IMAGE: viliusgudziunas/goals-app_users
+  USERS_DB_CACHE_IMAGE: viliusgudziunas/goals-app-users-db
 
 before_install:
   - sudo rm /usr/local/bin/docker-compose
@@ -16,6 +17,7 @@ before_install:
 
 before_script:
   - docker pull $USERS_CACHE_IMAGE:latest || true
+  - docker pull $USERS_DB_CACHE_IMAGE:latest || true
   - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1
   - docker-compose up -d --build
 
@@ -29,6 +31,7 @@ script:
 after_success:
   - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
   - docker push $USERS_CACHE_IMAGE:latest
+  - docker push $USERS_DB_CACHE_IMAGE:latest
 
 after_script:
   - docker-compose down

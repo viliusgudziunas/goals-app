@@ -26,6 +26,9 @@ services:
     build:
       context: ./services/users/project/db
       dockerfile: Dockerfile
+      cache_from:
+        - viliusgudziunas/goals-app-users-db:latest
+      image: viliusgudziunas/goals-app-users-db:latest
     ports:
       - 5435:5432
     environment:
