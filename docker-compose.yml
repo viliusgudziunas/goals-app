@@ -39,6 +39,9 @@ services:
     build:
       context: ./services/nginx
       dockerfile: Dockerfile
+      cache_from:
+        - viliusgudziunas/goals-app-nginx:latest
+    image: viliusgudziunas/goals-app-nginx:latest
     restart: always
     ports:
       - 80:80
@@ -50,6 +53,9 @@ services:
     build:
       context: ./services/client
       dockerfile: Dockerfile
+      cache_from:
+        - viliusgudziunas/goals-app-client:latest
+    image: viliusgudziunas/goals-app-client:latest
     volumes:
       - './services/client:/usr/src/app'
       - '/usr/src/app/node_modules'
