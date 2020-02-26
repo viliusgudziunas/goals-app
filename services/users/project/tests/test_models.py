@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from project.api.models import User
+from project.models import User
 
 
 def test_add_user(test_app, test_db, add_user):

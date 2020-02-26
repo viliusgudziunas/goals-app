@@ -1,8 +1,8 @@
 from flask import Blueprint
 from flask_restplus import Api, Resource, fields
 
-from project import db
-from project.api.models import User
+from project.models import User
+from project.service.users_service import add_new_user, get_all_users, get_single_user
 
 users_blueprint = Blueprint("users", __name__)
 api = Api(users_blueprint)
@@ -39,32 +39,26 @@ class UsersPing(Resource):
 class UsersList(Resource):
     @api.marshal_with(users_response)
     def get(self):
-        return {"status": "success", "data": User.query.all()}, 200
+        return {"status": "success", "data": get_all_users()}, 200
 
     @api.expect(post_users, validate=True)
     @api.marshal_with(user_response)
     def post(self):
-        data = api.payload
-        email = data.get("email")
-        password = data.get("password")
-        user = User.query.filter_by(email=email).first()
-        if user:
-            message = f"Email '{email}' already exists"
-            api.abort(400, message, status="fail")
+        response = add_new_user(api.payload)
+        if "fail" in response:
+            api.abort(response["status_code"], response["message"], status="fail")
 
-        user = User(email=email, password=password)
-        db.session.add(user)
-        db.session.commit()
-        return {"status": "success", "data": user}, 201
+        response_object = {"status": "success", "data": response["data"]}
+        return response_object, response["status_code"]
 
 
 @api.route("/users/<int:user_id>")
 class Users(Resource):
     @api.marshal_with(user_response)
     def get(self, user_id):
-        user = User.query.filter_by(id=user_id).first()
-        if not user:
-            message = f"User id '{user_id}' does not exist"
-            api.abort(404, message, status="fail")
+        response = get_single_user(user_id)
+        if "fail" in response:
+            api.abort(response["status_code"], response["message"], status="fail")
 
-        return {"status": "success", "data": user}, 200
+        response_object = {"status": "success", "data": response["data"]}
+        return response_object, response["status_code"]

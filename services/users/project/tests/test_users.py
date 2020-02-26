@@ -75,9 +75,9 @@ def test_add_user_duplicate_email(test_app, test_db, add_user, post_users):
     resp = post_users(client)
     data = resp.json
 
-    assert resp.status_code == 400
+    assert resp.status_code == 409
     assert data["status"] == "fail"
-    assert data["message"] == "Email 'test@test.com' already exists"
+    assert data["message"] == "User already exists"
 
 
 def test_single_user(test_app, test_db, add_user):
@@ -108,7 +108,7 @@ def test_single_user_incorrect_id(test_app, test_db):
 
     assert resp.status_code == 404
     assert data["status"] == "fail"
-    assert data["message"] == "User id '0' does not exist"
+    assert data["message"] == "User does not exist"
 
 
 def test_all_users(test_app, test_db, add_user):
