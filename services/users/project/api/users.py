@@ -1,7 +1,6 @@
 from flask import Blueprint
 from flask_restplus import Api, Resource, fields
 
-from project.models import User
 from project.service.users_service import add_new_user, get_all_users, get_single_user
 
 users_blueprint = Blueprint("users", __name__)
