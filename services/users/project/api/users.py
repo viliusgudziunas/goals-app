@@ -1,4 +1,4 @@
-from flask_restplus import Resource
+from flask_restx import Resource
 
 from project.service.users_service import add_new_user, get_all_users, get_single_user
 from project.util.dto import UsersDto

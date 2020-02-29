@@ -22,8 +22,8 @@ def test_development_config(test_app):
     assert test_app.config["PREFERRED_URL_SCHEME"] == "http"
     assert not test_app.config["PRESERVE_CONTEXT_ON_EXCEPTION"]
     assert test_app.config["PROPAGATE_EXCEPTIONS"] is None
-    assert test_app.config["RESTPLUS_MASK_HEADER"] == "X-Fields"
-    assert test_app.config["RESTPLUS_MASK_SWAGGER"]
+    assert test_app.config["RESTX_MASK_HEADER"] == "X-Fields"
+    assert test_app.config["RESTX_MASK_SWAGGER"]
     assert test_app.config["SECRET_KEY"] == os.environ.get("SECRET_KEY")
     assert test_app.config["SEND_FILE_MAX_AGE_DEFAULT"] == timedelta(seconds=43200)
     assert test_app.config["SERVER_NAME"] is None
@@ -75,8 +75,8 @@ def test_testing_config(test_app):
     assert test_app.config["PREFERRED_URL_SCHEME"] == "http"
     assert not test_app.config["PRESERVE_CONTEXT_ON_EXCEPTION"]
     assert test_app.config["PROPAGATE_EXCEPTIONS"] is None
-    assert test_app.config["RESTPLUS_MASK_HEADER"] == "X-Fields"
-    assert test_app.config["RESTPLUS_MASK_SWAGGER"]
+    assert test_app.config["RESTX_MASK_HEADER"] == "X-Fields"
+    assert test_app.config["RESTX_MASK_SWAGGER"]
     assert test_app.config["SECRET_KEY"] == os.environ.get("SECRET_KEY")
     assert test_app.config["SEND_FILE_MAX_AGE_DEFAULT"] == timedelta(seconds=43200)
     assert test_app.config["SERVER_NAME"] is None
@@ -130,8 +130,8 @@ def test_production_config(test_app):
     assert test_app.config["PREFERRED_URL_SCHEME"] == "http"
     assert not test_app.config["PRESERVE_CONTEXT_ON_EXCEPTION"]
     assert test_app.config["PROPAGATE_EXCEPTIONS"] is None
-    assert test_app.config["RESTPLUS_MASK_HEADER"] == "X-Fields"
-    assert test_app.config["RESTPLUS_MASK_SWAGGER"]
+    assert test_app.config["RESTX_MASK_HEADER"] == "X-Fields"
+    assert test_app.config["RESTX_MASK_SWAGGER"]
     assert test_app.config["SECRET_KEY"] == os.environ.get("SECRET_KEY")
     assert test_app.config["SEND_FILE_MAX_AGE_DEFAULT"] == timedelta(seconds=43200)
     assert test_app.config["SERVER_NAME"] is None
