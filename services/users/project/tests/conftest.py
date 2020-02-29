@@ -37,7 +37,7 @@ def add_user():
 def post_users():
     def _post_users(client, email="test@test.com", password="test"):
         resp = client.post(
-            "/users",
+            "/users/",
             data=json.dumps({"email": email, "password": password}),
             content_type="application/json",
         )

@@ -2,39 +2,32 @@ from project import db
 from project.models import User
 
 
-def add_new_user(data):
-    response_object = {"status_code": 201}
-    email = data["email"]
-    password = data["password"]
+def add_new_user(api):
+    email = api.payload["email"]
+    password = api.payload["password"]
 
     user = User.query.filter_by(email=email).first()
     if user:
-        response_object["fail"] = True
-        response_object["message"] = "User already exists"
-        response_object["status_code"] = 409
-        return response_object
+        api.abort(409, "User already exists", status="fail")
 
     new_user = User(email=email, password=password)
     save_changes(new_user)
 
-    response_object["data"] = new_user
-    return response_object
+    response_object = {"status": "success", "data": new_user}
+    return response_object, 201
 
 
 def get_all_users():
-    return User.query.all()
+    response_object = {"status": "success", "data": User.query.all()}
+    return response_object
 
 
-def get_single_user(id):
-    response_object = {"status_code": 200}
+def get_single_user(api, id):
     user = User.query.filter_by(id=id).first()
     if not user:
-        response_object["fail"] = True
-        response_object["message"] = "User does not exist"
-        response_object["status_code"] = 404
-        return response_object
+        api.abort(404, "User does not exist", status="fail")
 
-    response_object["data"] = user
+    response_object = {"status": "success", "data": user}
     return response_object
 
 
