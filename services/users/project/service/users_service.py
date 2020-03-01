@@ -1,5 +1,5 @@
-from project import db
 from project.models import User
+from project.service.base_service import save_changes
 
 
 def add_new_user(api):
@@ -13,13 +13,12 @@ def add_new_user(api):
     new_user = User(email=email, password=password)
     save_changes(new_user)
 
-    response_object = {"status": "success", "data": new_user}
-    return response_object, 201
+    auth_token = new_user.encode_auth_token(new_user.id)
+    return {"status": "success", "data": new_user, "auth_token": auth_token}, 201
 
 
 def get_all_users():
-    response_object = {"status": "success", "data": User.query.all()}
-    return response_object
+    return {"status": "success", "data": User.query.all()}
 
 
 def get_single_user(api, id):
@@ -27,10 +26,4 @@ def get_single_user(api, id):
     if not user:
         api.abort(404, "User does not exist", status="fail")
 
-    response_object = {"status": "success", "data": user}
-    return response_object
-
-
-def save_changes(obj):
-    db.session.add(obj)
-    db.session.commit()
+    return {"status": "success", "data": user}

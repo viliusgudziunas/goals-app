@@ -1,5 +1,3 @@
-import json
-
 import pytest
 
 
@@ -13,9 +11,9 @@ def test_users_ping(test_app):
     assert data["message"] == "pong!"
 
 
-def test_add_user(test_app, test_db, post_users):
+def test_add_user(test_app, test_db, post_user):
     client = test_app.test_client()
-    resp = post_users(client)
+    resp = post_user(client)
     data = resp.json
 
     assert resp.status_code == 201
@@ -36,9 +34,9 @@ def test_add_user_no_json(test_app, test_db):
     assert data["message"] == msg
 
 
-def test_add_user_empty_json(test_app, test_db):
+def test_add_user_empty_json(test_app, test_db, post_user):
     client = test_app.test_client()
-    resp = client.post("/users/", data=json.dumps({}), content_type="application/json")
+    resp = post_user(client, {})
     data = resp.json
 
     assert resp.status_code == 400
@@ -49,30 +47,41 @@ def test_add_user_empty_json(test_app, test_db):
 
 
 @pytest.mark.parametrize(
-    "email, password, field, value",
-    [
-        ["", "test", "email", "''"],
-        ["test@test.com", "", "password", "''"],
-        ["test@test.com", "123", "password", "'123'"],
-    ],
+    "field, value, property",
+    [["password", "test", "email"], ["email", "test@test.com", "password"]],
 )
-def test_add_user_missing_payload(
-    test_app, test_db, post_users, email, password, field, value
-):
+def test_add_user_missing_payload(test_app, test_db, post_user, field, value, property):
     client = test_app.test_client()
-    resp = post_users(client, email=email, password=password)
+    resp = post_user(client, {field: value})
     data = resp.json
 
     assert resp.status_code == 400
     assert len(data["errors"]) == 1
-    assert data["errors"][field] == f"{value} is too short"
+    assert data["errors"][property] == f"'{property}' is a required property"
     assert data["message"] == "Input payload validation failed"
 
 
-def test_add_user_duplicate_email(test_app, test_db, add_user, post_users):
+@pytest.mark.parametrize(
+    "email, password, field, value",
+    [["t@.st", "test", "email", "t@.st"], ["test@test.com", "tes", "password", "tes"]],
+)
+def test_add_user_value_too_short(
+    test_app, test_db, post_user, email, password, field, value
+):
+    client = test_app.test_client()
+    resp = post_user(client, {"email": email, "password": password})
+    data = resp.json
+
+    assert resp.status_code == 400
+    assert len(data["errors"]) == 1
+    assert data["errors"][field] == f"'{value}' is too short"
+    assert data["message"] == "Input payload validation failed"
+
+
+def test_add_user_duplicate_email(test_app, test_db, add_user, post_user):
     client = test_app.test_client()
     add_user()
-    resp = post_users(client)
+    resp = post_user(client)
     data = resp.json
 
     assert resp.status_code == 409

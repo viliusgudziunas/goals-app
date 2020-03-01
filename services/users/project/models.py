@@ -9,6 +9,10 @@ from project import bcrypt, db
 
 
 class User(db.Model):
+    """
+    User Model for storing users data
+    """
+
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -25,22 +29,18 @@ class User(db.Model):
 
     def encode_auth_token(self, id):
         """Generate user auth token"""
-        try:
-            payload = {
-                "exp": datetime.utcnow()
-                + timedelta(
-                    days=current_app.config.get("TOKEN_EXPIRATION_DAYS"),
-                    seconds=current_app.config.get("TOKEN_EXPIRATION_SECONDS"),
-                ),
-                "iat": datetime.utcnow(),
-                "sub": id,
-            }
-
-            return jwt.encode(
-                payload, current_app.config.get("SECRET_KEY"), algorithm="HS256"
-            )
-        except Exception as e:
-            return e
+        payload = {
+            "exp": datetime.utcnow()
+            + timedelta(
+                days=current_app.config.get("TOKEN_EXPIRATION_DAYS"),
+                seconds=current_app.config.get("TOKEN_EXPIRATION_SECONDS"),
+            ),
+            "iat": datetime.utcnow(),
+            "sub": id,
+        }
+        return jwt.encode(
+            payload, current_app.config.get("SECRET_KEY"), algorithm="HS256"
+        )
 
     @staticmethod
     def decode_auth_token(token):
@@ -48,11 +48,41 @@ class User(db.Model):
         try:
             payload = jwt.decode(token, current_app.config.get("SECRET_KEY"))
 
+            is_blacklisted = BlacklistToken.check_blacklist(token)
+            if is_blacklisted:
+                return "Token blacklisted"
+
             return payload["sub"]
+
         except jwt.ExpiredSignatureError:
-            return "Signature expired. Please log in again"
-        except jwt.InvalidToken:
-            return "Invalid token. Please log in again"
+            return "Signature expired"
+
+        except jwt.InvalidTokenError:
+            return "Invalid token"
+
+
+class BlacklistToken(db.Model):
+    """
+    Token Model for storing JWT tokens
+    """
+
+    __tablename__ = "blacklist_tokens"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    token = db.Column(db.String(500), unique=True, nullable=False)
+    blacklisted_on = db.Column(db.DateTime, default=func.now(), nullable=False)
+
+    def __init__(self, token):
+        self.token = token
+
+    @staticmethod
+    def check_blacklist(auth_token):
+        """Check whether auth token has been blacklisted"""
+        token = BlacklistToken.query.filter_by(token=str(auth_token)).first()
+        if token:
+            return True
+
+        return False
 
 
 if os.getenv("FLASK_ENV") == "development":
