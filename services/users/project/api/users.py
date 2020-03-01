@@ -21,13 +21,14 @@ class UsersList(Resource):
     @api.doc("get a list of users")
     @api.marshal_with(_users)
     def get(self):
-        """List all registered users"""
+        """Get a list of users"""
         return get_all_users()
 
     @api.doc("create a new user")
     @api.expect(_users_payload, validate=True)
     @api.marshal_with(_user)
     def post(self):
+        """Create a new user"""
         return add_new_user(api)
 
 
@@ -36,4 +37,5 @@ class Users(Resource):
     @api.doc("get a user")
     @api.marshal_with(_user)
     def get(self, user_id):
+        """Get a user"""
         return get_single_user(api, user_id)

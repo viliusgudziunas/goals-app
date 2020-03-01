@@ -7,7 +7,7 @@ from project.models import User
 def test_add_user(test_app, test_db, add_user):
     user = add_user()
 
-    assert user.id
+    assert user.id > 0
     assert user.email == "test@test.com"
     assert user.password
     assert user.active
