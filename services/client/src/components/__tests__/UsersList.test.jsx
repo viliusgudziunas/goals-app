@@ -4,8 +4,8 @@ import renderer from 'react-test-renderer';
 import UsersList from '../UsersList';
 
 const users = [
-  { active: true, email: 'test@test.com', id: 1 },
-  { active: true, email: 'test2@test.com', id: 2 }
+  { id: 1, email: 'test@test.com', created_date: '2020-03-02T22:24:05.718728' },
+  { id: 2, email: 'test2@test.com', created_date: '2020-03-02T22:24:05.718728' }
 ];
 
 describe('UsersList', () => {

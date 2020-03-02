@@ -1,15 +1,31 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import renderer from 'react-test-renderer';
+
 import AddUser from '../AddUser';
+
+const pingFetchUsers = true;
+const setPingFetchUsers = jest.fn();
 
 describe('AddUser', () => {
   it('renders a snapshot properly', () => {
-    const tree = renderer.create(<AddUser />).toJSON();
+    const tree = renderer
+      .create(
+        <AddUser
+          pingFetchUsers={pingFetchUsers}
+          setPingFetchUsers={setPingFetchUsers}
+        />
+      )
+      .toJSON();
     expect(tree).toMatchSnapshot();
   });
 
-  const wrapper = shallow(<AddUser />);
+  const wrapper = shallow(
+    <AddUser
+      pingFetchUsers={pingFetchUsers}
+      setPingFetchUsers={setPingFetchUsers}
+    />
+  );
   it('renders properly', () => {
     const form = wrapper.find('form');
 
