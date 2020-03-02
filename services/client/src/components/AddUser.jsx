@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 const AddUser = ({ pingFetchUsers, setPingFetchUsers }) => {
@@ -19,27 +20,28 @@ const AddUser = ({ pingFetchUsers, setPingFetchUsers }) => {
   };
 
   return (
-    <div>
-      <div className='row'>
-        <form className='col-md-4' onSubmit={handleFormSubmit}>
-          <div className='form-group'>
-            <input
-              type='email'
-              className='form-control'
-              placeholder='Enter an email address'
-              id='formEmail'
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <button type='submit' className='btn btn-success btn-block'>
-            Submit
-          </button>
-        </form>
+    <form className='col-md-4' onSubmit={handleFormSubmit}>
+      <div className='form-group'>
+        <input
+          type='email'
+          className='form-control'
+          placeholder='Enter an email address'
+          id='formEmail'
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          required
+        />
       </div>
-    </div>
+      <button type='submit' className='btn btn-success btn-block'>
+        Submit
+      </button>
+    </form>
   );
+};
+
+AddUser.propTypes = {
+  pingFetchUsers: PropTypes.bool.isRequired,
+  setPingFetchUsers: PropTypes.func.isRequired
 };
 
 export default AddUser;
