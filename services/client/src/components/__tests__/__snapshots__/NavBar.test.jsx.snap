@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NavBar renders a snapshot properly 1`] = `
+<nav
+  className="navbar navbar-expand navbar-dark bg-dark"
+>
+  <div
+    className="container"
+  >
+    <span
+      className="navbar-brand"
+    >
+      Test
+    </span>
+    <div
+      className="mr-auto navbar-nav"
+    >
+      <a
+        className="nav-link"
+        data-rb-event-key="/"
+        href="/"
+        onClick={[Function]}
+      >
+        Home
+      </a>
+      <a
+        className="nav-link"
+        data-rb-event-key="/about"
+        href="/about"
+        onClick={[Function]}
+      >
+        About
+      </a>
+      <a
+        className="nav-link"
+        data-rb-event-key="/status"
+        href="/status"
+        onClick={[Function]}
+      >
+        User Status
+      </a>
+    </div>
+    <div
+      className="navbar-nav"
+    >
+      <a
+        className="nav-link"
+        data-rb-event-key="/register"
+        href="/register"
+        onClick={[Function]}
+      >
+        Register
+      </a>
+      <a
+        className="nav-link"
+        data-rb-event-key="/login"
+        href="/login"
+        onClick={[Function]}
+      >
+        Log In
+      </a>
+      <a
+        className="nav-link"
+        data-rb-event-key="/logout"
+        href="/logout"
+        onClick={[Function]}
+      >
+        Log Out
+      </a>
+    </div>
+  </div>
+</nav>
+`;

@@ -45,5 +45,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "<rootDir>/src/**/*.{js,jsx}",
+      "!<rootDir>/src/index.jsx",
+      "!<rootDir>/src/App.jsx",
+      "!<rootDir>/src/components/bootstrap_templates/*.{js,jsx}"
+    ]
   }
 }
