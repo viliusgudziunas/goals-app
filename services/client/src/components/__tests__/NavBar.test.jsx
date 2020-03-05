@@ -6,14 +6,14 @@ import NavBar from '../NavBar';
 
 const title = 'Test';
 const firstLinks = [
-  [0, '/', 'Home'],
-  [1, '/about', 'About'],
-  [2, '/status', 'User Status']
+  { index: 0, endpoint: '/', link: 'Home' },
+  { index: 1, endpoint: '/about', link: 'About' },
+  { index: 2, endpoint: '/status', link: 'User Status' }
 ];
 const secondLinks = [
-  [0, '/register', 'Register'],
-  [1, '/login', 'Log In'],
-  [2, '/logout', 'Log Out']
+  { index: 0, endpoint: '/register', link: 'Register' },
+  { index: 1, endpoint: '/login', link: 'Log In' },
+  { index: 2, endpoint: '/logout', link: 'Log Out' }
 ];
 
 describe('<NavBar />', () => {
@@ -31,19 +31,32 @@ describe('<NavBar />', () => {
     expect(wrapper.find('span').get(0).props.children).toBe(title);
   });
 
-  const firstNav = wrapper.find('.navbar-nav').get(0);
-  test.each(firstLinks, (index, endpoint, link) => {
-    it(`should have ${link} link on the right, pointing to ${endpoint}`, () => {
-      expect(firstNav.props.children[index].props.children).toBe(link);
-      expect(firstNav.props.children[index].props.to).toBe(endpoint);
+  const navs = wrapper.find('.navbar-nav');
+  it('should have two navs', () => {
+    expect(navs.length).toBe(2);
+  });
+
+  const firstNav = navs.get(0);
+  firstLinks.forEach(linkInfo => {
+    it(`should have ${linkInfo.endpoint} link on the right, pointing to ${linkInfo.link}`, () => {
+      expect(firstNav.props.children[linkInfo.index].props.children).toBe(
+        linkInfo.link
+      );
+      expect(firstNav.props.children[linkInfo.index].props.to).toBe(
+        linkInfo.endpoint
+      );
     });
   });
 
-  const secondNav = wrapper.find('.navbar-nav').get(1);
-  test.each(secondLinks, (index, endpoint, link) => {
-    it(`should have ${link} link on the left, pointing to ${endpoint}`, () => {
-      expect(secondNav.props.children[index].props.children).toBe(link);
-      expect(secondNav.props.children[index].props.to).toBe(endpoint);
+  const secondNav = navs.get(1);
+  secondLinks.forEach(linkInfo => {
+    it(`should have ${linkInfo.endpoint} link on the left, pointing to ${linkInfo.link}`, () => {
+      expect(secondNav.props.children[linkInfo.index].props.children).toBe(
+        linkInfo.link
+      );
+      expect(secondNav.props.children[linkInfo.index].props.to).toBe(
+        linkInfo.endpoint
+      );
     });
   });
 });

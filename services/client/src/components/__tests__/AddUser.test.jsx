@@ -22,9 +22,13 @@ describe('<AddUser />', () => {
     expect(form.length).toBe(1);
   });
 
+  const formFields = form.find('input');
+  it('should have one input field', () => {
+    expect(formFields.length).toBe(1);
+  });
+
   it('should have an email field', () => {
-    expect(form.find('input').length).toBe(1);
-    expect(form.find('input').get(0).props.type).toBe('email');
+    expect(formFields.get(0).props.type).toBe('email');
   });
 
   it('should have a submit button', () => {
