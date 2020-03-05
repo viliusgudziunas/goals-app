@@ -1,16 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`About renders a snapshot properly 1`] = `
-<div
-  className="container"
->
-  <br />
-  <h1>
-    About
-  </h1>
-  <hr />
-  <p>
-    Add something relevant here
-  </p>
-</div>
-`;
+exports[`<About /> should match the snapshot 1`] = `"<div class=\\"container\\"><br/><h1>About</h1><hr/><p>Add something relevant here</p></div>"`;
