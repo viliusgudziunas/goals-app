@@ -1,28 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AddUser renders a snapshot properly 1`] = `
-<form
-  className="col-md-4"
-  onSubmit={[Function]}
->
-  <div
-    className="form-group"
-  >
-    <input
-      className="form-control"
-      id="formEmail"
-      onChange={[Function]}
-      placeholder="Enter an email address"
-      required={true}
-      type="email"
-      value=""
-    />
-  </div>
-  <button
-    className="btn btn-success btn-block"
-    type="submit"
-  >
-    Submit
-  </button>
-</form>
-`;
+exports[`<AddUser /> should match the snapshot 1`] = `"<form class=\\"col-md-4\\"><div class=\\"form-group\\"><input type=\\"email\\" class=\\"form-control\\" placeholder=\\"Enter an email address\\" id=\\"formEmail\\" value=\\"\\" required=\\"\\"/></div><button type=\\"submit\\" class=\\"btn btn-success btn-block\\">Submit</button></form>"`;

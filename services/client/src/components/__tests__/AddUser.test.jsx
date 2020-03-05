@@ -1,36 +1,34 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import renderer from 'react-test-renderer';
 
 import AddUser from '../AddUser';
 
 const pingFetchUsers = true;
 const setPingFetchUsers = jest.fn();
 
-describe('AddUser', () => {
-  it('renders a snapshot properly', () => {
-    const tree = renderer
-      .create(
-        <AddUser
-          pingFetchUsers={pingFetchUsers}
-          setPingFetchUsers={setPingFetchUsers}
-        />
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
+describe('<AddUser />', () => {
   const wrapper = shallow(
     <AddUser
       pingFetchUsers={pingFetchUsers}
       setPingFetchUsers={setPingFetchUsers}
     />
   );
-  it('renders properly', () => {
-    const form = wrapper.find('form');
+  it('should match the snapshot', () => {
+    expect(wrapper.html()).toMatchSnapshot();
+  });
 
+  const form = wrapper.find('form');
+  it('should have a form', () => {
+    expect(form.length).toBe(1);
+  });
+
+  it('should have an email field', () => {
     expect(form.find('input').length).toBe(1);
     expect(form.find('input').get(0).props.type).toBe('email');
+  });
+
+  it('should have a submit button', () => {
+    expect(form.find('button').length).toBe(1);
     expect(form.find('button').get(0).props.type).toBe('submit');
   });
 });
