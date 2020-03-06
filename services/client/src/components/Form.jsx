@@ -1,15 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
+import { Redirect } from 'react-router-dom';
+
+import { GlobalContext } from '../context/GlobalState';
 
 const Form = ({ formType }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const clearForm = () => {
+    setEmail('');
+    setPassword('');
+  };
+
+  useEffect(() => {
+    clearForm();
+  }, [formType]);
+
+  const { authenticate } = useContext(GlobalContext);
   const handleFormSubmit = e => {
     e.preventDefault();
-    console.log(email);
-    console.log(password);
+    const data = { email, password };
+    axios
+      .post(
+        `${
+          process.env.REACT_APP_USERS_SERVICE_URL
+        }/auth/${formType.toLowerCase()}`,
+        data
+      )
+      .then(res => {
+        clearForm();
+        window.localStorage.setItem('authToken', res.data.auth_token);
+        authenticate();
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
+
+  const { authenticated } = useContext(GlobalContext);
+  if (authenticated) {
+    return <Redirect to='/' />;
+  }
 
   return (
     <div className='container'>
@@ -29,6 +62,7 @@ const Form = ({ formType }) => {
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
+              minLength='6'
             />
           </div>
           <div className='form-group'>
@@ -41,6 +75,7 @@ const Form = ({ formType }) => {
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
+              minLength='4'
             />
           </div>
           <button type='submit' className='btn btn-success btn-block'>
