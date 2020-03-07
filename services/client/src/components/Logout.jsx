@@ -5,13 +5,11 @@ import { GlobalContext } from '../context/GlobalState';
 
 const Logout = () => {
   const { logout } = useContext(GlobalContext);
-  const logoutUser = () => {
-    window.localStorage.clear();
-    logout();
-  };
 
   useEffect(() => {
-    logoutUser();
+    window.localStorage.clear();
+    logout();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
