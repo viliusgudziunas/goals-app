@@ -1,9 +1,10 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
+import NavBar from './components/NavBar';
 import Admin from './components/Admin';
 import About from './components/About';
-import NavBar from './components/NavBar';
+import UserStatus from './components/UserStatus';
 import Form from './components/Form';
 import Logout from './components/Logout';
 
@@ -16,6 +17,7 @@ const App = () => {
       <Switch>
         <Route exact path='/' component={Admin} />
         <Route exact path='/about' component={About} />
+        <Route exact path='/status' component={UserStatus} />
         <Route
           exact
           path='/register'
