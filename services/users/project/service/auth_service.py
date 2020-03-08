@@ -1,5 +1,3 @@
-from flask import request
-
 from project import bcrypt
 from project.models import BlacklistToken, User
 from project.service.base_service import save_changes
@@ -18,37 +16,11 @@ def login_user(api):
     return {"status": "success", "data": user, "auth_token": auth_token.decode()}
 
 
-def logout_user():
-    auth_header = request.headers.get("Authorization")
-    if not auth_header:
-        return {"status": "fail", "message": "No auth token provided"}, 401
-
-    try:
-        auth_token = auth_header.split(" ")[1]
-    except IndexError:
-        return {"status": "fail", "message": "Invalid token"}, 401
-
-    resp = User.decode_auth_token(auth_token)
-    if isinstance(resp, str):
-        return {"status": "fail", "message": resp}, 401
-
+def logout_user(auth_token):
     blacklist_token = BlacklistToken(token=auth_token)
     save_changes(blacklist_token)
     return {"status": "success", "message": "User successfully logged out"}
 
 
-def user_status(api):
-    auth_header = request.headers.get("Authorization")
-    if not auth_header:
-        api.abort(401, "No auth token provided", status="fail")
-
-    try:
-        auth_token = auth_header.split(" ")[1]
-    except IndexError:
-        api.abort(401, "Invalid token", status="fail")
-
-    resp = User.decode_auth_token(auth_token)
-    if isinstance(resp, str):
-        api.abort(401, resp, status="fail")
-
+def user_status(resp):
     return {"status": "success", "data": User.query.filter_by(id=resp).first()}

@@ -1,6 +1,7 @@
 from flask_restx import Resource
 
 from project.service.users_service import add_new_user, get_all_users, get_single_user
+from project.util.decorators import token_required
 from project.util.dto import UsersDto
 
 api = UsersDto.api
@@ -27,9 +28,10 @@ class UsersList(Resource):
     @api.doc("create a new user")
     @api.expect(_users_payload, validate=True)
     @api.marshal_with(_user)
-    def post(self):
+    @token_required(api)
+    def post(self, resp, *args):
         """Create a new user"""
-        return add_new_user(api)
+        return add_new_user(api, resp)
 
 
 @api.route("/<int:user_id>")

@@ -33,18 +33,34 @@ def add_user():
     return _add_user
 
 
+@pytest.fixture(scope="function")
+def add_admin(add_user):
+    def _add_admin(email="test@test.com", password="test"):
+        user = add_user(email, password)
+        user.admin = True
+        db.session.commit()
+        return user
+
+    return _add_admin
+
+
 credentials = {"email": "test@test.com", "password": "test"}
 
 
-def post_request(client, url, payload):
-    resp = client.post(url, data=json.dumps(payload), content_type="application/json")
+def post_request(client, url, payload, token=None):
+    resp = client.post(
+        url,
+        data=json.dumps(payload),
+        content_type="application/json",
+        headers={"Authorization": f"Bearer {token}"},
+    )
     return resp
 
 
 @pytest.fixture(scope="function")
 def post_user():
-    def _post_user(client, credentials=credentials):
-        return post_request(client, "/users/", credentials)
+    def _post_user(client, credentials=credentials, token=None):
+        return post_request(client, "/users/", credentials, token)
 
     return _post_user
 
@@ -79,3 +95,13 @@ def check_status():
         return client.get("/auth/status", headers={"Authorization": f"Bearer {token}"})
 
     return _check_status
+
+
+@pytest.fixture(scope="function")
+def logged_in_user(add_user, login):
+    def _logged_in_user(client, credentials=credentials):
+        user = add_user(email=credentials["email"], password=credentials["password"])
+        resp = login(client, credentials)
+        return user, resp.json["auth_token"]
+
+    return _logged_in_user

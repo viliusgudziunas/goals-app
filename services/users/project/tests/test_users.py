@@ -1,5 +1,7 @@
 import pytest
 
+from project import db
+
 
 def test_users_ping(test_app):
     client = test_app.test_client()
@@ -11,17 +13,24 @@ def test_users_ping(test_app):
     assert data["message"] == "pong!"
 
 
-def test_add_user(test_app, test_db, post_user):
+def test_add_user(test_app, test_db, add_admin, login, post_user):
     client = test_app.test_client()
-    resp = post_user(client)
+    add_admin()
+    resp = login(client)
+    resp = post_user(
+        client,
+        credentials={"email": "test1@test.com", "password": "test"},
+        token=resp.json["auth_token"],
+    )
     data = resp.json
 
     assert resp.status_code == 201
     assert data["status"] == "success"
-    assert len(data["data"].keys()) == 3
+    assert len(data["data"].keys()) == 4
     assert data["data"]["id"]
-    assert data["data"]["email"] == "test@test.com"
+    assert data["data"]["email"] == "test1@test.com"
     assert data["data"]["created_date"]
+    assert data["data"]["admin"] is False
 
 
 def test_add_user_no_json(test_app, test_db):
@@ -78,15 +87,44 @@ def test_add_user_value_too_short(
     assert data["message"] == "Input payload validation failed"
 
 
-def test_add_user_duplicate_email(test_app, test_db, add_user, post_user):
+def test_add_user_duplicate_email(test_app, test_db, add_admin, login, post_user):
     client = test_app.test_client()
-    add_user()
-    resp = post_user(client)
+    add_admin()
+    resp = login(client)
+    resp = post_user(client, token=resp.json["auth_token"])
     data = resp.json
 
     assert resp.status_code == 409
     assert data["status"] == "fail"
     assert data["message"] == "User already exists"
+
+
+def test_add_user_inactive(test_app, test_db, logged_in_user, post_user):
+    client = test_app.test_client()
+    user, auth_token = logged_in_user(client)
+    user.active = False
+    db.session.commit()
+    resp = post_user(client, token=auth_token)
+    data = resp.json
+
+    assert resp.status_code == 401
+    assert data["status"] == "fail"
+    assert data["message"] == "Invalid token"
+
+
+def test_add_user_not_admin(test_app, test_db, logged_in_user, post_user):
+    client = test_app.test_client()
+    _, auth_token = logged_in_user(client)
+    resp = post_user(
+        client,
+        credentials={"email": "test1@test.com", "password": "test"},
+        token=auth_token,
+    )
+    data = resp.json
+
+    assert resp.status_code == 401
+    assert data["status"] == "fail"
+    assert data["message"] == "Insufficient permissions"
 
 
 def test_single_user(test_app, test_db, add_user):
@@ -97,10 +135,11 @@ def test_single_user(test_app, test_db, add_user):
 
     assert resp.status_code == 200
     assert data["status"] == "success"
-    assert len(data["data"].keys()) == 3
+    assert len(data["data"].keys()) == 4
     assert data["data"]["id"]
     assert data["data"]["email"] == "test@test.com"
     assert data["data"]["created_date"]
+    assert data["data"]["admin"] is False
 
 
 def test_single_user_id_not_integer(test_app, test_db):
@@ -131,9 +170,10 @@ def test_all_users(test_app, test_db, add_user):
     assert data["status"] == "success"
     assert len(data["data"]) == 2
     for user in data["data"]:
-        assert len(user.keys()) == 3
+        assert len(user.keys()) == 4
         assert user["id"]
         assert user["email"]
         assert user["created_date"]
+        assert user["admin"] is False
     assert data["data"][0]["email"] == "test@test.com"
     assert data["data"][1]["email"] == "test2@test.com"

@@ -16,6 +16,7 @@ class UsersDto:
             "id": fields.Integer(description="user identifier"),
             "email": fields.String(description="user email address"),
             "created_date": fields.DateTime(description="user created date"),
+            "admin": fields.Boolean(description="indicator of whether a user is admin"),
         },
     )
     users_payload = api.inherit(
@@ -58,7 +59,7 @@ class AuthDto:
     user = api.inherit(
         "AuthUser",
         UsersDto.user,
-        {"active": fields.Boolean(description="Indicator of whether a user is active")},
+        {"active": fields.Boolean(description="indicator of whether a user is active")},
     )
     user_status_response = api.inherit(
         "UserStatusResponse", BaseDto.response, {"data": fields.Nested(user)}
