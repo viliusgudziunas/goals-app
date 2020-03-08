@@ -1,10 +1,12 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
+import NavBar from './components/NavBar';
 import Admin from './components/Admin';
 import About from './components/About';
-import NavBar from './components/NavBar';
-import Form from './components/Form';
+import UserStatusPage from './pages/UserStatusPage';
+import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/LoginPage';
 import Logout from './components/Logout';
 
 import { GlobalProvider } from './context/GlobalState';
@@ -16,12 +18,9 @@ const App = () => {
       <Switch>
         <Route exact path='/' component={Admin} />
         <Route exact path='/about' component={About} />
-        <Route
-          exact
-          path='/register'
-          render={() => <Form formType='Register' />}
-        />
-        <Route exact path='/login' render={() => <Form formType='Login' />} />
+        <Route exact path='/status' component={UserStatusPage} />
+        <Route exact path='/register' component={RegisterPage} />
+        <Route exact path='/login' component={LoginPage} />
         <Route exact path='/logout' component={Logout} />
       </Switch>
     </GlobalProvider>

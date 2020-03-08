@@ -47,11 +47,8 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "<rootDir>/src/**/*.{js,jsx}",
-      "!<rootDir>/src/index.jsx",
-      "!<rootDir>/src/App.jsx",
-      "!<rootDir>/src/context/*.{js,jsx}",
-      "!<rootDir>/src/components/bootstrap_templates/*.{js,jsx}"
+      "<rootDir>/src/components/*.{js,jsx}",
+      "<rootDir>/src/pages/*.{js,jsx}"
     ]
   }
 }

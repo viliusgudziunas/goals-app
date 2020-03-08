@@ -24,18 +24,12 @@ const Admin = () => {
       <br />
       <h1>All Users</h1>
       <hr />
-      <div className='row'>
-        <AddUser
-          pingFetchUsers={pingFetchUsers}
-          setPingFetchUsers={setPingFetchUsers}
-        />
-      </div>
+      <AddUser
+        pingFetchUsers={pingFetchUsers}
+        setPingFetchUsers={setPingFetchUsers}
+      />
       <hr />
-      <div className='row'>
-        <div className='column'>
-          <UsersList users={users} />
-        </div>
-      </div>
+      <UsersList users={users} />
     </div>
   );
 };

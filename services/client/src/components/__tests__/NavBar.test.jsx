@@ -5,15 +5,11 @@ import { MemoryRouter as Router } from 'react-router-dom';
 import NavBar from '../NavBar';
 
 const title = 'Test';
-const firstLinks = [
+const theLinks = [
   { index: 0, endpoint: '/', link: 'Home' },
   { index: 1, endpoint: '/about', link: 'About' },
-  { index: 2, endpoint: '/status', link: 'User Status' }
-];
-const secondLinks = [
-  { index: 0, endpoint: '/register', link: 'Register' },
-  { index: 1, endpoint: '/login', link: 'Log In' },
-  { index: 2, endpoint: '/logout', link: 'Log Out' }
+  { index: 2, endpoint: '/register', link: 'Register' },
+  { index: 3, endpoint: '/login', link: 'Log In' }
 ];
 
 describe('<NavBar />', () => {
@@ -31,32 +27,19 @@ describe('<NavBar />', () => {
     expect(wrapper.find('span').get(0).props.children).toBe(title);
   });
 
-  const navs = wrapper.find('.navbar-nav');
   it('should have two navs', () => {
-    expect(navs.length).toBe(2);
+    expect(wrapper.find('.navbar-nav').length).toBe(2);
   });
 
-  const firstNav = navs.get(0);
-  firstLinks.forEach(linkInfo => {
-    it(`should have ${linkInfo.endpoint} link on the right, pointing to ${linkInfo.link}`, () => {
-      expect(firstNav.props.children[linkInfo.index].props.children).toBe(
-        linkInfo.link
-      );
-      expect(firstNav.props.children[linkInfo.index].props.to).toBe(
-        linkInfo.endpoint
-      );
-    });
+  const links = wrapper.find('Link');
+  it('should have four links', () => {
+    expect(links.length).toBe(4);
   });
 
-  const secondNav = navs.get(1);
-  secondLinks.forEach(linkInfo => {
-    it(`should have ${linkInfo.endpoint} link on the left, pointing to ${linkInfo.link}`, () => {
-      expect(secondNav.props.children[linkInfo.index].props.children).toBe(
-        linkInfo.link
-      );
-      expect(secondNav.props.children[linkInfo.index].props.to).toBe(
-        linkInfo.endpoint
-      );
+  theLinks.forEach(linkInfo => {
+    it(`should have a link to ${linkInfo.link}`, () => {
+      expect(links.get(linkInfo.index).props.to).toBe(linkInfo.endpoint);
+      expect(links.get(linkInfo.index).props.children).toBe(linkInfo.link);
     });
   });
 });

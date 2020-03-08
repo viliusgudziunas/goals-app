@@ -15,9 +15,11 @@ const Logout = () => {
   return (
     <div className='container'>
       <br />
+      <h1>Logged Out</h1>
+      <hr />
       <p>
         You are now logged out. Click <Link to='/login'>here</Link> to log back
-        in
+        in.
       </p>
     </div>
   );

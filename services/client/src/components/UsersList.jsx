@@ -3,14 +3,18 @@ import PropTypes from 'prop-types';
 
 const UsersList = ({ users }) => {
   return (
-    <div className='list-group list-group-flush'>
-      {users.map(user => {
-        return (
-          <div className='list-group-item' key={user.id}>
-            {user.email}
-          </div>
-        );
-      })}
+    <div className='row'>
+      <div className='col'>
+        <div className='row list-group list-group-flush'>
+          {users.map(user => {
+            return (
+              <div className='list-group-item' key={user.id}>
+                {user.email}
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };

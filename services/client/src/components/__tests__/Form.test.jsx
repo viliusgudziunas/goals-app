@@ -17,7 +17,7 @@ forms.forEach(formInfo => {
 
     it('should have a header', () => {
       expect(wrapper.find('h1').length).toBe(1);
-      expect(wrapper.find('h1').get(0).props.children).toBe(formInfo.title);
+      expect(wrapper.find('h1').text()).toBe(formInfo.title);
     });
 
     const form = wrapper.find('form');
