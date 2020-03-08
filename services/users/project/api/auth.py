@@ -37,7 +37,7 @@ class Logout(Resource):
     @api.doc("logout a user")
     @api.marshal_with(_logout_response)
     @token_required(api)
-    def get(self, auth_token, *args):
+    def get(self, _, auth_token):
         """Logout a user"""
         return logout_user(auth_token)
 
@@ -47,6 +47,6 @@ class UserStatus(Resource):
     @api.doc("get user status")
     @api.marshal_with(_user_status_response)
     @token_required(api)
-    def get(self, _, resp):
+    def get(self, resp, *args):
         """Get user status"""
         return user_status(resp)

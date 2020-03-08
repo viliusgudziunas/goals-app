@@ -26,7 +26,7 @@ def token_required(api):
             if not user or not user.active:
                 api.abort(401, "Invalid token", status="fail")
 
-            return f(self, auth_token, resp, *args, **kwargs)
+            return f(self, resp, auth_token, *args, **kwargs)
 
         return decorated_function
 

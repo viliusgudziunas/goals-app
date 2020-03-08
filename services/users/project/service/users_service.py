@@ -2,7 +2,12 @@ from project.models import User
 from project.service.base_service import save_changes
 
 
-def add_new_user(api):
+def add_new_user(api, user_id=None):
+    if user_id:
+        admin = User.query.with_entities(User.admin).filter_by(id=user_id).first()[0]
+        if not admin:
+            api.abort(401, "Insufficient permissions", status="fail")
+
     email = api.payload["email"]
     password = api.payload["password"]
 

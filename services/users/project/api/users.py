@@ -29,9 +29,9 @@ class UsersList(Resource):
     @api.expect(_users_payload, validate=True)
     @api.marshal_with(_user)
     @token_required(api)
-    def post(self, *args):
+    def post(self, resp, *args):
         """Create a new user"""
-        return add_new_user(api)
+        return add_new_user(api, resp)
 
 
 @api.route("/<int:user_id>")

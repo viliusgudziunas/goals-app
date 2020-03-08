@@ -33,6 +33,17 @@ def add_user():
     return _add_user
 
 
+@pytest.fixture(scope="function")
+def add_admin(add_user):
+    def _add_admin(email="test@test.com", password="test"):
+        user = add_user(email, password)
+        user.admin = True
+        db.session.commit()
+        return user
+
+    return _add_admin
+
+
 credentials = {"email": "test@test.com", "password": "test"}
 
 

@@ -10,10 +10,11 @@ def test_register_user(test_app, test_db, register):
 
     assert resp.status_code == 201
     assert data["status"] == "success"
-    assert len(data["data"].keys()) == 3
+    assert len(data["data"].keys()) == 4
     assert data["data"]["id"]
     assert data["data"]["email"] == "test@test.com"
     assert data["data"]["created_date"]
+    assert data["data"]["admin"] is False
     assert data["auth_token"]
 
 
@@ -92,10 +93,11 @@ def test_registered_user_login(test_app, test_db, add_user, login):
 
     assert resp.status_code == 200
     assert data["status"] == "success"
-    assert len(data["data"].keys()) == 3
+    assert len(data["data"].keys()) == 4
     assert data["data"]["id"]
     assert data["data"]["email"] == "test@test.com"
     assert data["data"]["created_date"]
+    assert data["data"]["admin"] is False
     assert data["auth_token"]
 
 
@@ -253,11 +255,12 @@ def test_user_status(test_app, test_db, logged_in_user, check_status):
 
     assert resp.status_code == 200
     assert data["status"] == "success"
-    assert len(data["data"].keys()) == 4
+    assert len(data["data"].keys()) == 5
     assert data["data"]["id"]
     assert data["data"]["email"] == "test@test.com"
     assert data["data"]["created_date"]
     assert data["data"]["active"]
+    assert data["data"]["admin"] is False
 
 
 def test_user_status_invalid_token(test_app, test_db, check_status):

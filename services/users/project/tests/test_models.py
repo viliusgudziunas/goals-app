@@ -12,6 +12,7 @@ def test_add_user(test_app, test_db, add_user):
     assert user.password
     assert user.active
     assert user.created_date
+    assert user.admin is False
 
 
 def test_add_duplicate_email(test_app, test_db, add_user):
