@@ -1,5 +1,7 @@
 import pytest
 
+from project import db
+
 
 def test_register_user(test_app, test_db, register):
     client = test_app.test_client()
@@ -141,11 +143,10 @@ def test_login_with_missing_credentials(
     assert data["message"] == "Input payload validation failed"
 
 
-def test_valid_logout(test_app, test_db, add_user, login, logout):
+def test_valid_logout(test_app, test_db, logged_in_user, logout):
     client = test_app.test_client()
-    add_user()
-    resp = login(client)
-    resp = logout(client, resp.json["auth_token"])
+    _, auth_token = logged_in_user(client)
+    resp = logout(client, auth_token)
     data = resp.json
 
     assert resp.status_code == 200
@@ -174,10 +175,9 @@ def test_invalid_logout_user_not_logged_in(test_app, test_db, add_user, logout):
     assert data["message"] == "Invalid token"
 
 
-def test_invalid_logout_invalid_token(test_app, test_db, add_user, login, logout):
+def test_invalid_logout_invalid_token(test_app, test_db, logged_in_user, logout):
     client = test_app.test_client()
-    add_user()
-    login(client)
+    logged_in_user(client)
     resp = logout(client, "test")
     data = resp.json
 
@@ -186,12 +186,11 @@ def test_invalid_logout_invalid_token(test_app, test_db, add_user, login, logout
     assert data["message"] == "Invalid token"
 
 
-def test_invalid_logout_expired_token(test_app, test_db, add_user, login, logout):
+def test_invalid_logout_expired_token(test_app, test_db, logged_in_user, logout):
     test_app.config["TOKEN_EXPIRATION_SECONDS"] = -1
     client = test_app.test_client()
-    add_user()
-    resp = login(client)
-    resp = logout(client, resp.json["auth_token"])
+    _, auth_token = logged_in_user(client)
+    resp = logout(client, auth_token)
     data = resp.json
 
     assert resp.status_code == 401
@@ -199,12 +198,11 @@ def test_invalid_logout_expired_token(test_app, test_db, add_user, login, logout
     assert data["message"] == "Signature expired"
 
 
-def test_invalid_logout_already_logged_out(test_app, test_db, add_user, login, logout):
+def test_invalid_logout_already_logged_out(test_app, test_db, logged_in_user, logout):
     client = test_app.test_client()
-    add_user()
-    resp = login(client)
-    logout(client, resp.json["auth_token"])
-    resp = logout(client, resp.json["auth_token"])
+    _, auth_token = logged_in_user(client)
+    logout(client, auth_token)
+    resp = logout(client, auth_token)
     data = resp.json
 
     assert resp.status_code == 401
@@ -212,10 +210,9 @@ def test_invalid_logout_already_logged_out(test_app, test_db, add_user, login, l
     assert data["message"] == "Token blacklisted"
 
 
-def test_invalid_logout_no_header(test_app, test_db, add_user, login):
+def test_invalid_logout_no_header(test_app, test_db, logged_in_user):
     client = test_app.test_client()
-    add_user()
-    login(client)
+    logged_in_user(client)
     resp = client.get("/auth/logout")
     data = resp.json
 
@@ -224,13 +221,10 @@ def test_invalid_logout_no_header(test_app, test_db, add_user, login):
     assert data["message"] == "No auth token provided"
 
 
-def test_invalid_logout_header_without_bearer(test_app, test_db, add_user, login):
+def test_invalid_logout_header_without_bearer(test_app, test_db, logged_in_user):
     client = test_app.test_client()
-    add_user()
-    resp = login(client)
-    resp = client.get(
-        "/auth/logout", headers={"Authorization": resp.json["auth_token"]}
-    )
+    _, auth_token = logged_in_user(client)
+    resp = client.get("/auth/logout", headers={"Authorization": auth_token})
     data = resp.json
 
     assert resp.status_code == 401
@@ -238,11 +232,23 @@ def test_invalid_logout_header_without_bearer(test_app, test_db, add_user, login
     assert data["message"] == "Invalid token"
 
 
-def test_user_status(test_app, test_db, add_user, login, check_status):
+def test_invalid_logout_inactive(test_app, test_db, logged_in_user, logout):
     client = test_app.test_client()
-    add_user()
-    resp = login(client)
-    resp = check_status(client, resp.json["auth_token"])
+    user, auth_token = logged_in_user(client)
+    user.active = False
+    db.session.commit()
+    resp = logout(client, auth_token)
+    data = resp.json
+
+    assert resp.status_code == 401
+    assert data["status"] == "fail"
+    assert data["message"] == "Invalid token"
+
+
+def test_user_status(test_app, test_db, logged_in_user, check_status):
+    client = test_app.test_client()
+    _, auth_token = logged_in_user(client)
+    resp = check_status(client, auth_token)
     data = resp.json
 
     assert resp.status_code == 200
@@ -264,12 +270,11 @@ def test_user_status_invalid_token(test_app, test_db, check_status):
     assert data["message"] == "Invalid token"
 
 
-def test_user_status_expired_token(test_app, test_db, add_user, login, check_status):
+def test_user_status_expired_token(test_app, test_db, logged_in_user, check_status):
     test_app.config["TOKEN_EXPIRATION_SECONDS"] = -1
     client = test_app.test_client()
-    add_user()
-    resp = login(client)
-    resp = check_status(client, resp.json["auth_token"])
+    _, auth_token = logged_in_user(client)
+    resp = check_status(client, auth_token)
     data = resp.json
 
     assert resp.status_code == 401
@@ -277,10 +282,9 @@ def test_user_status_expired_token(test_app, test_db, add_user, login, check_sta
     assert data["message"] == "Signature expired"
 
 
-def test_user_status_no_header(test_app, test_db, add_user, login):
+def test_user_status_no_header(test_app, test_db, logged_in_user):
     client = test_app.test_client()
-    add_user()
-    login(client)
+    logged_in_user(client)
     resp = client.get("/auth/status")
     data = resp.json
 
@@ -289,13 +293,23 @@ def test_user_status_no_header(test_app, test_db, add_user, login):
     assert data["message"] == "No auth token provided"
 
 
-def test_user_status_header_without_bearer(test_app, test_db, add_user, login):
+def test_user_status_header_without_bearer(test_app, test_db, logged_in_user):
     client = test_app.test_client()
-    add_user()
-    resp = login(client)
-    resp = client.get(
-        "/auth/status", headers={"Authorization": resp.json["auth_token"]}
-    )
+    _, auth_token = logged_in_user(client)
+    resp = client.get("/auth/status", headers={"Authorization": auth_token})
+    data = resp.json
+
+    assert resp.status_code == 401
+    assert data["status"] == "fail"
+    assert data["message"] == "Invalid token"
+
+
+def test_user_status_inactive(test_app, test_db, logged_in_user, check_status):
+    client = test_app.test_client()
+    user, auth_token = logged_in_user(client)
+    user.active = False
+    db.session.commit()
+    resp = check_status(client, auth_token)
     data = resp.json
 
     assert resp.status_code == 401

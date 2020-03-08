@@ -2,6 +2,7 @@ from flask_restx import Resource
 
 from project.service.auth_service import login_user, logout_user, user_status
 from project.service.users_service import add_new_user
+from project.util.decorators import token_required
 from project.util.dto import AuthDto
 
 api = AuthDto.api
@@ -35,15 +36,17 @@ class Login(Resource):
 class Logout(Resource):
     @api.doc("logout a user")
     @api.marshal_with(_logout_response)
-    def get(self):
+    @token_required(api)
+    def get(self, auth_token, *args):
         """Logout a user"""
-        return logout_user()
+        return logout_user(auth_token)
 
 
 @api.route("/status")
 class UserStatus(Resource):
     @api.doc("get user status")
     @api.marshal_with(_user_status_response)
-    def get(self):
+    @token_required(api)
+    def get(self, _, resp):
         """Get user status"""
-        return user_status(api)
+        return user_status(resp)

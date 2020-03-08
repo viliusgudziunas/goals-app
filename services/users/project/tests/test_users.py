@@ -1,5 +1,7 @@
 import pytest
 
+from project import db
+
 
 def test_users_ping(test_app):
     client = test_app.test_client()
@@ -11,16 +13,21 @@ def test_users_ping(test_app):
     assert data["message"] == "pong!"
 
 
-def test_add_user(test_app, test_db, post_user):
+def test_add_user(test_app, test_db, logged_in_user, post_user):
     client = test_app.test_client()
-    resp = post_user(client)
+    _, auth_token = logged_in_user(client)
+    resp = post_user(
+        client,
+        credentials={"email": "test1@test.com", "password": "test"},
+        token=auth_token,
+    )
     data = resp.json
 
     assert resp.status_code == 201
     assert data["status"] == "success"
     assert len(data["data"].keys()) == 3
     assert data["data"]["id"]
-    assert data["data"]["email"] == "test@test.com"
+    assert data["data"]["email"] == "test1@test.com"
     assert data["data"]["created_date"]
 
 
@@ -78,15 +85,28 @@ def test_add_user_value_too_short(
     assert data["message"] == "Input payload validation failed"
 
 
-def test_add_user_duplicate_email(test_app, test_db, add_user, post_user):
+def test_add_user_duplicate_email(test_app, test_db, logged_in_user, post_user):
     client = test_app.test_client()
-    add_user()
-    resp = post_user(client)
+    _, auth_token = logged_in_user(client)
+    resp = post_user(client, token=auth_token)
     data = resp.json
 
     assert resp.status_code == 409
     assert data["status"] == "fail"
     assert data["message"] == "User already exists"
+
+
+def test_add_user_inactive(test_app, test_db, logged_in_user, post_user):
+    client = test_app.test_client()
+    user, auth_token = logged_in_user(client)
+    user.active = False
+    db.session.commit()
+    resp = post_user(client, token=auth_token)
+    data = resp.json
+
+    assert resp.status_code == 401
+    assert data["status"] == "fail"
+    assert data["message"] == "Invalid token"
 
 
 def test_single_user(test_app, test_db, add_user):
