@@ -2,27 +2,29 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { MemoryRouter as Router } from 'react-router-dom';
 
-import Logout from '../Logout';
+import NotAllowed from '../NotAllowed';
 
-describe('<Logout />', () => {
+describe('<NotAllowed />', () => {
   it('should match the snapshot', () => {
     const wrapper = shallow(
       <Router location='/'>
-        <Logout />
+        <NotAllowed />
       </Router>
     );
     expect(wrapper.html()).toMatchSnapshot();
   });
 
-  const wrapper = shallow(<Logout />);
+  const wrapper = shallow(<NotAllowed />);
   it('should have a header', () => {
     expect(wrapper.find('h1').length).toBe(1);
-    expect(wrapper.find('h1').text()).toBe('Logged Out');
+    expect(wrapper.find('h1').text()).toBe('Not Allowed');
   });
 
-  it('should have a logged out message', () => {
+  it('should have a not allowed message', () => {
     expect(wrapper.find('p').length).toBe(1);
-    expect(wrapper.find('p').text()).toContain('You are now logged out.');
+    expect(wrapper.find('p').text()).toContain(
+      'You must be logged in to view this.'
+    );
   });
 
   it('should have a link to login page', () => {

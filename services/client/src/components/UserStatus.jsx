@@ -27,27 +27,23 @@ const UserStatus = () => {
   }, []);
 
   return (
-    <>
-      <div className='container'>
-        <br />
-        <h1>User Status</h1>
-        <hr />
-        <div className='row'>
-          <div className='list-group'>
-            <div className='list-group-item user-status-list-item'>
-              <strong>{'User ID: '}</strong>
-              {id}
-            </div>
-            <div className='list-group-item user-status-list-item'>
-              <strong>{'Email: '}</strong>
-              {email}
-            </div>
+    <div className='container'>
+      <br />
+      <h1>User Status</h1>
+      <hr />
+      <div className='row'>
+        <div className='list-group'>
+          <div className='list-group-item user-status-list-item'>
+            <strong>{'User ID: '}</strong>
+            {id}
+          </div>
+          <div className='list-group-item user-status-list-item'>
+            <strong>{'Email: '}</strong>
+            {email}
           </div>
         </div>
       </div>
-      <br />
-      <br />
-    </>
+    </div>
   );
 };
 

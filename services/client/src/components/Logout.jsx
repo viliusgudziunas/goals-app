@@ -19,7 +19,7 @@ const Logout = () => {
       <hr />
       <p>
         You are now logged out. Click <Link to='/login'>here</Link> to log back
-        in
+        in.
       </p>
     </div>
   );

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
 
 import { GlobalContext } from '../context/GlobalState';
 
@@ -38,11 +37,6 @@ const Form = ({ formType }) => {
         console.log(err);
       });
   };
-
-  const { authenticated } = useContext(GlobalContext);
-  if (authenticated) {
-    return <Redirect to='/' />;
-  }
 
   return (
     <div className='container'>
