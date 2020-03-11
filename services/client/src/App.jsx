@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import NavBar from './components/NavBar';
-import Admin from './components/Admin';
+import UsersList from './components/UsersList';
 import About from './components/About';
 import UserStatusPage from './pages/UserStatusPage';
 import RegisterPage from './pages/RegisterPage';
@@ -16,7 +16,7 @@ const App = () => {
     <GlobalProvider>
       <NavBar title='Goals App' />
       <Switch>
-        <Route exact path='/' component={Admin} />
+        <Route exact path='/' component={UsersList} />
         <Route exact path='/about' component={About} />
         <Route exact path='/status' component={UserStatusPage} />
         <Route exact path='/register' component={RegisterPage} />

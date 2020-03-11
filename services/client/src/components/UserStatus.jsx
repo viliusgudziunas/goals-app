@@ -33,11 +33,11 @@ const UserStatus = () => {
       <hr />
       <div className='row'>
         <div className='list-group'>
-          <div className='list-group-item user-status-list-item'>
+          <div className='list-group-item'>
             <strong>{'User ID: '}</strong>
             {id}
           </div>
-          <div className='list-group-item user-status-list-item'>
+          <div className='list-group-item'>
             <strong>{'Email: '}</strong>
             {email}
           </div>
