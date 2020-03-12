@@ -33,6 +33,10 @@ RUN npm run build
 # Base image
 FROM nginx:1.17.7-alpine
 
+# Update Nginx Config
+RUN rm -rf /etc/nginx/conf.d
+COPY conf /etc/nginx
+
 # Static files
 COPY --from=builder /usr/src/app/build /usr/share/nginx/html
 

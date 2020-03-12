@@ -18,7 +18,7 @@ def add_new_user(api, user_id=None):
     new_user = User(email=email, password=password)
     save_changes(new_user)
 
-    auth_token = new_user.encode_auth_token(new_user.id)
+    auth_token = new_user.encode_auth_token(new_user.id).decode()
     return {"status": "success", "data": new_user, "auth_token": auth_token}, 201
 
 

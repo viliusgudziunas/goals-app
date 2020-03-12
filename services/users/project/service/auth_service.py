@@ -11,9 +11,8 @@ def login_user(api):
     if not user or not bcrypt.check_password_hash(user.password, password):
         api.abort(404, "Incorrect credentials", status="fail")
 
-    auth_token = user.encode_auth_token(user.id)
-
-    return {"status": "success", "data": user, "auth_token": auth_token.decode()}
+    auth_token = user.encode_auth_token(user.id).decode()
+    return {"status": "success", "data": user, "auth_token": auth_token}
 
 
 def logout_user(auth_token):
