@@ -1,32 +1,53 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const UsersList = ({ users }) => {
+import './styles/UsersList.css';
+
+const UsersList = () => {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_USERS_SERVICE_URL}/users`)
+      .then(res => {
+        setUsers(res.data.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, []);
+
   return (
-    <div className='row'>
-      <div className='col'>
-        <div className='row list-group list-group-flush'>
-          {users.map(user => {
-            return (
-              <div className='list-group-item' key={user.id}>
-                {user.email}
-              </div>
-            );
-          })}
-        </div>
+    <div className='container'>
+      <br />
+      <h1>All Users</h1>
+      <hr />
+      <div className='table-responsive'>
+        <table className='table'>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Email</th>
+              <th>Active</th>
+              <th>Admin</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map(user => {
+              return (
+                <tr key={user.id}>
+                  <td>{user.id}</td>
+                  <td>{user.email}</td>
+                  <td>{String(user.active)}</td>
+                  <td>{String(user.admin)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   );
-};
-
-UsersList.propTypes = {
-  users: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      email: PropTypes.string.isRequired,
-      created_date: PropTypes.string.isRequired
-    }).isRequired
-  ).isRequired
 };
 
 export default UsersList;

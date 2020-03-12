@@ -29,7 +29,7 @@ def test_add_user(test_app, test_db, add_admin, login, post_user):
     assert len(data["data"].keys()) == 4
     assert data["data"]["id"]
     assert data["data"]["email"] == "test1@test.com"
-    assert data["data"]["created_date"]
+    assert data["data"]["active"]
     assert data["data"]["admin"] is False
 
 
@@ -138,7 +138,7 @@ def test_single_user(test_app, test_db, add_user):
     assert len(data["data"].keys()) == 4
     assert data["data"]["id"]
     assert data["data"]["email"] == "test@test.com"
-    assert data["data"]["created_date"]
+    assert data["data"]["active"]
     assert data["data"]["admin"] is False
 
 
@@ -173,7 +173,7 @@ def test_all_users(test_app, test_db, add_user):
         assert len(user.keys()) == 4
         assert user["id"]
         assert user["email"]
-        assert user["created_date"]
+        assert user["active"]
         assert user["admin"] is False
     assert data["data"][0]["email"] == "test@test.com"
     assert data["data"][1]["email"] == "test2@test.com"
