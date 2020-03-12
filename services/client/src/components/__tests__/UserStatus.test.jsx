@@ -5,7 +5,9 @@ import UserStatus from '../UserStatus';
 
 const listItems = [
   { index: 0, name: 'User ID' },
-  { index: 1, name: 'Email' }
+  { index: 1, name: 'Email' },
+  { index: 2, name: 'Active' },
+  { index: 3, name: 'Admin' }
 ];
 
 describe('<UserStatus />', () => {

@@ -6,6 +6,8 @@ import './styles/UserStatus.css';
 const UserStatus = () => {
   const [id, setId] = useState(null);
   const [email, setEmail] = useState('');
+  const [active, setActive] = useState('');
+  const [admin, setAdmin] = useState('');
 
   useEffect(() => {
     const options = {
@@ -20,6 +22,8 @@ const UserStatus = () => {
       .then(res => {
         setId(res.data.data.id);
         setEmail(res.data.data.email);
+        setActive(String(res.data.data.active));
+        setAdmin(String(res.data.data.admin));
       })
       .catch(error => {
         console.log(error);
@@ -40,6 +44,14 @@ const UserStatus = () => {
           <div className='list-group-item'>
             <strong>{'Email: '}</strong>
             {email}
+          </div>
+          <div className='list-group-item'>
+            <strong>{'Active: '}</strong>
+            {active}
+          </div>
+          <div className='list-group-item'>
+            <strong>{'Admin: '}</strong>
+            {admin}
           </div>
         </div>
       </div>
