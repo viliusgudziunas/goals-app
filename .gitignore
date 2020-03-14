@@ -4,3 +4,4 @@ COMMANDS.md
 .coverage
 htmlcov
 .vscode
+node_modules
