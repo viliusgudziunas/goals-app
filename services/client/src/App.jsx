@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import NavBar from './components/NavBar';
@@ -9,11 +9,19 @@ import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import Logout from './components/Logout';
 
-import { GlobalProvider } from './context/GlobalState';
+import { GlobalContext } from './context/GlobalState';
 
 const App = () => {
+  const { authenticate } = useContext(GlobalContext);
+  useEffect(() => {
+    if (window.localStorage.getItem('authToken')) {
+      authenticate();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <GlobalProvider>
+    <>
       <NavBar title='Goals App' />
       <Switch>
         <Route exact path='/' component={UsersList} />
@@ -23,7 +31,7 @@ const App = () => {
         <Route exact path='/login' component={LoginPage} />
         <Route exact path='/logout' component={Logout} />
       </Switch>
-    </GlobalProvider>
+    </>
   );
 };
 
