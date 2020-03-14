@@ -1,7 +1,6 @@
 #!/bin/bash
 
 fails=""
-aaa
 
 inspect() {
     if [ $1 -ne 0 ]; then
