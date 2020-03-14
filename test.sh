@@ -8,7 +8,7 @@ inspect() {
     fi
 }
 
-# run tests for users service
+# run users tests
 users() {
   echo "\nRunning users tests!\n"
   docker-compose exec users pytest "project/tests" -s -p no:warnings --cov="project"
@@ -21,7 +21,7 @@ users() {
   inspect $? users-imports
 }
 
-# run tests for client service
+# run client tests
 client() {
   echo "\nRunning client tests!\n"
   docker-compose exec client react-scripts test --coverage --watchAll=false
@@ -35,16 +35,31 @@ fix_users() {
   docker-compose exec users /bin/sh -c "isort ./*/*/*.py --filter-files"
 }
 
+# run end to end tests
+e2e() {
+  echo "\nRunning end-to-end tests!\n"
+  type=$1
+  if [[ "${type}" == "ci" ]]; then 
+    ./node_modules/.bin/cypress run --config baseUrl=http://localhost:3007
+  else
+    ./node_modules/.bin/cypress run
+  fi
+  inspect $? e2e
+}
+
 docker-compose up -d --build
 option=$1
-# run the proper tests
+
+# decide which tests are to be ran
 if [[ "${option}" == "users" ]]; then users
 elif [[ "${option}" == "client" ]]; then client
 elif [[ "${option}" == "fix-users" ]]; then fix_users
+elif [[ "${option}" == "e2e" ]]; then e2e
 elif [[ "${option}" == "ci" ]]; then
   echo "\nRunning tests in continuous integration!\n"
   users
   client
+  e2e ci
   docker-compose down
 else
   echo "\nThis option is not supported: ${option}"

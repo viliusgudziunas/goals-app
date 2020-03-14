@@ -1,0 +1,6 @@
+{
+  "name": "goals-app",
+  "devDependencies": {
+    "cypress": "^4.1.0"
+  }
+}

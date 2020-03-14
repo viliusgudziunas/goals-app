@@ -19,6 +19,7 @@ before_script:
   - docker pull $USERS_CACHE_IMAGE:latest || true
   - docker pull $CLIENT_CACHE_IMAGE:latest || true
   - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1
+  - npm install
 
 script:
   - bash test.sh ci
