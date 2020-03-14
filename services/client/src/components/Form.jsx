@@ -61,7 +61,7 @@ const Form = ({ formType }) => {
           </div>
           <div className='form-group'>
             <input
-              name='passowrd'
+              name='password'
               type='password'
               className='form-control'
               placeholder='Enter a password'

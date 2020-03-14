@@ -32,11 +32,13 @@ forms.forEach(formInfo => {
 
     it('should have email field', () => {
       expect(formFields.get(0).props.type).toBe('email');
+      expect(formFields.get(0).props.name).toBe('email');
       expect(formFields.get(0).props.value).toBe('');
     });
 
     it('should have password field', () => {
       expect(formFields.get(1).props.type).toBe('password');
+      expect(formFields.get(1).props.name).toBe('password');
       expect(formFields.get(1).props.value).toBe('');
     });
 
