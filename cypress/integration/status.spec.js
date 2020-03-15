@@ -40,6 +40,8 @@ describe('Status', () => {
       .click();
 
     // assert "/status" is displayed properly
+    cy.contains('All Users');
+
     cy.get('a')
       .contains('User Status')
       .click();

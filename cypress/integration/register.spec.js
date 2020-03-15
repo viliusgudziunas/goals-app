@@ -26,6 +26,8 @@ describe('Register', () => {
 
     // assert user is redirected to "/"
     // assert "/" is displayed properly
+    cy.contains('All Users');
+
     cy.get('h1').contains('All Users');
 
     cy.contains(email);
