@@ -54,17 +54,17 @@ describe('Login', () => {
       .contains(email);
 
     cy.get('.navbar-collapse').within(() => {
-      cy.get('.nav-link')
+      cy.get('a')
         .contains('User Status')
 
-        .get('.nav-link')
+        .get('a')
         .contains('Log Out')
 
-        .get('.nav-link')
+        .get('a')
         .contains('Log In')
         .should('not.be.visible')
 
-        .get('.nav-link')
+        .get('a')
         .contains('Register')
         .should('not.be.visible');
     });

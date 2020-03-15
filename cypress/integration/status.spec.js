@@ -40,7 +40,7 @@ describe('Status', () => {
       .click();
 
     // assert "/status" is displayed properly
-    cy.get('.nav-link')
+    cy.get('a')
       .contains('User Status')
       .click();
 
