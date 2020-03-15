@@ -41,6 +41,7 @@ describe('Status', () => {
 
     // assert "/status" is displayed properly
     cy.contains('All Users');
+    cy.contains(email);
 
     cy.get('a')
       .contains('User Status')
