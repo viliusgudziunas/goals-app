@@ -23,7 +23,6 @@ describe('Register', () => {
 
       .get('button[type="submit"]')
       .click();
-    cy.wait(500);
 
     // assert user is redirected to "/"
     // assert "/" is displayed properly
